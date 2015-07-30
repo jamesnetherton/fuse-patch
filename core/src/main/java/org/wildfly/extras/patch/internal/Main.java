@@ -21,6 +21,7 @@ package org.wildfly.extras.patch.internal;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -70,7 +71,7 @@ public class Main {
         }
     }
 
-	private static void run(CmdLineParser cmdParser, Options options) throws IOException {
+	private static void run(CmdLineParser cmdParser, Options options) throws IOException, URISyntaxException {
 		
 	    boolean opfound = false;
 	    
@@ -83,14 +84,14 @@ public class Main {
 		
         // Query the repository
         if (options.queryRepository) {
-            PatchTool patchTool = new PatchToolBuilder().repositoryUrl(options.repositoryUrl).build();
+            PatchTool patchTool = new PatchToolBuilder().repositoryUri(options.repositoryUrl.toURI()).build();
             printPatches(patchTool.getPatchRepository().queryAvailable(null));
             opfound = true;
         } 
         
         // Add to repository
         if (options.addUrl != null) {
-            PatchTool patchTool = new PatchToolBuilder().repositoryUrl(options.repositoryUrl).build();
+            PatchTool patchTool = new PatchToolBuilder().repositoryUri(options.repositoryUrl.toURI()).build();
             PatchId oneoffId = null;
             Set<PatchId> dependencies = new LinkedHashSet<>();
             if (options.patchId != null) {
@@ -108,7 +109,7 @@ public class Main {
         
         // Add post install command
         if (options.addCmd != null) {
-            PatchTool patchTool = new PatchToolBuilder().repositoryUrl(options.repositoryUrl).build();
+            PatchTool patchTool = new PatchToolBuilder().repositoryUri(options.repositoryUrl.toURI()).build();
             PatchId patchId;
             String[] cmdarr;
             if (options.addUrl != null) {
@@ -124,14 +125,14 @@ public class Main {
         
         // Install to server
         if (options.installId != null) {
-            PatchTool patchTool = new PatchToolBuilder().serverPath(options.serverHome).repositoryUrl(options.repositoryUrl).build();
+            PatchTool patchTool = new PatchToolBuilder().serverPath(options.serverHome).repositoryUri(options.repositoryUrl.toURI()).build();
             patchTool.install(PatchId.fromString(options.installId), options.force);
             opfound = true;
         }
         
         // Update the server
         if (options.updateName != null) {
-            PatchTool patchTool = new PatchToolBuilder().serverPath(options.serverHome).repositoryUrl(options.repositoryUrl).build();
+            PatchTool patchTool = new PatchToolBuilder().serverPath(options.serverHome).repositoryUri(options.repositoryUrl.toURI()).build();
             patchTool.update(options.updateName, options.force);
             opfound = true;
         } 
