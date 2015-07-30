@@ -61,8 +61,8 @@ public class SimpleRepositoryTest {
 
     @Test
     public void testSimpleAccess() throws Exception {
-        
-        URI urlA = new URI("file:///./target/repos/SimpleRepositoryTest/repoA");
+
+        URI urlA = new File("target/repos/SimpleRepositoryTest/repoA").toURI();
         PatchTool patchTool = new PatchToolBuilder().repositoryUri(urlA).build();
         Repository repo = patchTool.getPatchRepository();
         
